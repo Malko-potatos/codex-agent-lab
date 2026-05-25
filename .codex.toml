@@ -3,6 +3,7 @@ name = "codex-agent-lab"
 purpose = "Codex 기반 반복 문서 및 운영 업무 자동화 에이전트 설계 저장소"
 visibility = "public"
 language = "ko"
+core_agent = "agents/00-agent-harness-translator"
 
 [defaults]
 base_agent = "codex"
@@ -10,6 +11,22 @@ status = "idea"
 human_review_required = true
 external_actions_default = "dry_run"
 output_mode = "draft"
+design_first_agent = "00-agent-harness-translator"
+
+[harness_translation]
+template = "agents/00-agent-harness-translator/templates/harness-parts-spec.md"
+required_axes = ["instruction", "knowledge_state", "capability_action", "control_crosscutting"]
+required_parts = [
+  "system_prompt",
+  "input_prompt",
+  "memory",
+  "skill",
+  "mcp_tool",
+  "subagent",
+  "hook"
+]
+must_define = ["input", "output", "failure_modes", "invariants"]
+empty_failure_modes_or_invariants = "design_defect_candidate"
 
 [folder_contract]
 required_files = ["AGENTS.md", ".codex.toml"]

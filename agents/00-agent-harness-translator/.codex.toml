@@ -1,0 +1,79 @@
+[agent]
+id = "00-agent-harness-translator"
+name = "에이전트 하네스 번역기"
+status = "core"
+base = "codex"
+visibility = "public-skeleton-only"
+priority = "highest"
+
+[scope]
+goal = "자연어 업무 아이디어를 Codex 하네스 부품 명세와 에이전트 폴더 산출물 초안으로 번역한다."
+target_users = ["에이전트 개발자", "업무 자동화 기획자", "대표", "운영 담당자"]
+non_goals = [
+  "개별 에이전트의 실제 운영 자동화 구현",
+  "민감 문서나 인증정보 저장",
+  "승인 없는 외부 연동 실행",
+  "불변식과 실패 모드가 비어 있는 상태에서 구현 시작"
+]
+
+[inputs]
+required = ["작업 아이디어", "대상 사용자", "입력 자료", "기대 출력", "외부 서비스 필요 여부"]
+optional = ["기존 업무 절차", "샘플 문서", "실패 사례", "보안 정책", "운영 빈도"]
+sensitive = ["실제 고객 문서", "개인정보", "인증정보", "계약/급여/세금 자료", "내부 절차 원문"]
+
+[outputs]
+primary = [
+  "하네스 부품별 명세",
+  "AGENTS.md 초안",
+  ".codex.toml 초안",
+  "skill 후보",
+  "MCP 도구 계약",
+  "hook 설계",
+  "subagent 위임 구조",
+  "테스트 가능한 불변식"
+]
+formats = ["markdown", "toml-draft", "folder-skeleton"]
+
+[tools]
+required = ["local_markdown_generation", "harness_spec_template"]
+optional = ["repo_file_generation", "diagram_generation"]
+external_services = []
+
+[harness_parts]
+instruction = ["system_prompt", "input_prompt"]
+knowledge_state = ["memory", "skill"]
+capability_action = ["mcp_tool", "subagent"]
+control_crosscutting = ["hook"]
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = [
+  "create_external_tool_contract",
+  "recommend_logged_in_browser_use",
+  "recommend_message_send",
+  "recommend_file_upload",
+  "recommend_crawling"
+]
+data_policy = "Do not store secrets, credentials, private documents, or personal data in translated specs."
+
+[workflow]
+steps = [
+  "summarize_mission",
+  "write_invariants_first",
+  "define_inputs_outputs",
+  "fill_failure_modes",
+  "map_to_harness_parts",
+  "draft_agents_md",
+  "draft_codex_toml",
+  "list_open_questions"
+]
+validation = [
+  "all_parts_have_inputs_outputs",
+  "all_parts_have_failure_modes",
+  "all_parts_have_invariants",
+  "mcp_tools_have_trust_boundaries",
+  "hooks_have_failure_policy",
+  "subagents_have_recursion_limit",
+  "public_repo_safety_checked"
+]
