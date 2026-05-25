@@ -1,0 +1,35 @@
+[agent]
+id = "07-instructor-cafe-user-research"
+name = "강사모 네이버카페 크롤링 기반 유저리서치"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "커뮤니티 데이터를 익명화된 시장 인사이트로 요약한다."
+target_users = ["마케터", "교육상품 기획자", "대표"]
+non_goals = ["약관 위반 크롤링", "회원 개인정보 수집", "원문 데이터 공개 저장"]
+
+[inputs]
+required = ["조사 키워드", "기간", "조사 질문"]
+optional = ["게시판 범위", "제외 키워드", "경쟁사 키워드"]
+sensitive = ["회원 정보", "로그인 쿠키", "비공개 게시글", "원문 데이터"]
+
+[outputs]
+primary = ["pain point 요약", "반복 질문", "콘텐츠 아이디어", "상품 기획 힌트"]
+formats = ["markdown", "csv"]
+
+[tools]
+required = ["research_summarization"]
+optional = ["browser_plugin", "crawler_after_policy_review"]
+external_services = ["naver_cafe"]
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["crawl_logged_in_site", "use_browser_session", "store_collected_data"]
+data_policy = "Do not commit cookies, private posts, usernames, or crawled raw text."
+
+[workflow]
+steps = ["define_research_questions", "review_collection_policy", "analyze_mock_data", "summarize_insights"]
+validation = ["terms_reviewed", "personal_data_removed", "raw_text_not_committed"]

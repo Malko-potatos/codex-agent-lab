@@ -1,0 +1,35 @@
+[agent]
+id = "10-multi-agent-ai-employee-team"
+name = "멀티에이전트 AI 직원 팀"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "신규사업 실험을 위한 역할 기반 멀티에이전트 협업 구조를 설계한다."
+target_users = ["대표", "신규사업 담당자", "운영 리더"]
+non_goals = ["사람 승인 없는 사업 의사결정", "내부 전략 공개", "외부 계약 자동 체결"]
+
+[inputs]
+required = ["사업 아이디어", "목표", "역할 목록", "의사결정 기준"]
+optional = ["시장 자료", "예산", "일정", "경쟁사 자료"]
+sensitive = ["신규사업 전략", "재무 정보", "파트너 정보"]
+
+[outputs]
+primary = ["역할별 agent spec", "작업 분해표", "실험 계획서", "결정 로그"]
+formats = ["markdown", "task-board"]
+
+[tools]
+required = ["planning", "research_summarization"]
+optional = ["subagents", "browser_search"]
+external_services = []
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["external_research", "contact_partner", "publish_strategy"]
+data_policy = "Do not commit confidential business strategy, financials, or partner information."
+
+[workflow]
+steps = ["define_roles", "set_handoff_contracts", "run_parallel_analysis", "summarize_decisions"]
+validation = ["sources_recorded", "assumptions_marked", "human_decision_required"]

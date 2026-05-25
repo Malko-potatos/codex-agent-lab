@@ -1,0 +1,46 @@
+[repository]
+name = "codex-agent-lab"
+purpose = "Codex 기반 반복 문서 및 운영 업무 자동화 에이전트 설계 저장소"
+visibility = "public"
+language = "ko"
+
+[defaults]
+base_agent = "codex"
+status = "idea"
+human_review_required = true
+external_actions_default = "dry_run"
+output_mode = "draft"
+
+[folder_contract]
+required_files = ["AGENTS.md", ".codex.toml"]
+optional_dirs = ["prompts", "templates", "examples", "scripts", "tests", "docs"]
+
+[security]
+never_commit = [
+  ".env",
+  "credentials",
+  "api_keys",
+  "tokens",
+  "cookies",
+  "customer_documents",
+  "employee_payroll",
+  "tax_invoices",
+  "contracts",
+  "naver_works_exports",
+  "reporter_contacts",
+  "private_crawled_data"
+]
+requires_human_approval = [
+  "send_email",
+  "send_message",
+  "upload_file",
+  "publish_post",
+  "crawl_logged_in_site",
+  "use_browser_session",
+  "connect_naver_works",
+  "distribute_press_release"
+]
+
+[review]
+idea_review_checklist = "docs/idea-review-checklist.md"
+security_policy = "docs/security-and-privacy.md"

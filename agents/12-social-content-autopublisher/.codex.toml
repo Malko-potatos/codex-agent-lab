@@ -1,0 +1,35 @@
+[agent]
+id = "12-social-content-autopublisher"
+name = "블로그·인스타 콘텐츠 자동생성 및 업로드"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "채널별 콘텐츠 초안과 업로드 준비물을 생성한다."
+target_users = ["마케팅 담당자", "홍보 담당자", "대표"]
+non_goals = ["승인 없는 게시", "사진 권리 미확인 게시", "계정 토큰 저장"]
+
+[inputs]
+required = ["콘텐츠 주제", "대상 고객", "핵심 메시지", "채널"]
+optional = ["사진", "톤앤매너", "키워드", "업로드 일정"]
+sensitive = ["고객 사례", "사진 초상권", "계정 토큰"]
+
+[outputs]
+primary = ["블로그 초안", "인스타 캡션", "해시태그", "업로드 체크리스트"]
+formats = ["markdown", "caption-draft", "content-calendar"]
+
+[tools]
+required = ["content_generation"]
+optional = ["cms_api", "instagram_api", "scheduler"]
+external_services = ["blog_platform", "instagram"]
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["publish_post", "upload_image", "schedule_post"]
+data_policy = "Do not commit account tokens, private customer stories, or unlicensed images."
+
+[workflow]
+steps = ["define_channel_goal", "draft_content", "rights_check", "prepare_publish_dry_run"]
+validation = ["brand_tone_checked", "image_rights_checked", "human_approval_before_publish"]

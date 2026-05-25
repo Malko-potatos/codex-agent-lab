@@ -1,0 +1,35 @@
+[agent]
+id = "15-keyword-clipping-newsletter"
+name = "키워드 클리핑 + 뉴스레터"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "키워드 기반 클리핑을 요약하고 뉴스레터 초안을 생성한다."
+target_users = ["마케팅 담당자", "대표", "리서치 담당자"]
+non_goals = ["저작권 있는 원문 재배포", "승인 없는 이메일 발송", "구독자 정보 공개"]
+
+[inputs]
+required = ["키워드 목록", "대상 독자", "발송 주기"]
+optional = ["제외 키워드", "참고 사이트", "톤앤매너"]
+sensitive = ["구독자 목록", "내부 관심 키워드", "유료 콘텐츠"]
+
+[outputs]
+primary = ["클리핑 요약", "인사이트", "뉴스레터 초안", "출처 목록"]
+formats = ["markdown", "email-draft"]
+
+[tools]
+required = ["web_research", "summarization"]
+optional = ["rss_reader", "email_client"]
+external_services = ["news_sources", "email"]
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["web_search", "send_email", "store_subscriber_list"]
+data_policy = "Do not commit subscriber lists, paid content, or full copyrighted articles."
+
+[workflow]
+steps = ["collect_sources", "summarize_by_keyword", "rank_items", "draft_newsletter"]
+validation = ["sources_cited", "copyright_safe_summary", "human_approval_before_send"]

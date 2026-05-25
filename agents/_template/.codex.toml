@@ -1,0 +1,44 @@
+[agent]
+id = "template"
+name = "Agent Template"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = ""
+target_users = []
+non_goals = [
+  "실제 민감정보 저장",
+  "승인 없는 외부 전송",
+  "검토 없는 최종 제출"
+]
+
+[inputs]
+required = []
+optional = []
+sensitive = []
+
+[outputs]
+primary = []
+formats = []
+
+[tools]
+required = []
+optional = []
+external_services = []
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = [
+  "network_access",
+  "external_send",
+  "file_upload",
+  "logged_in_browser_use"
+]
+data_policy = "Do not commit secrets, credentials, private documents, or personal data."
+
+[workflow]
+steps = []
+validation = []

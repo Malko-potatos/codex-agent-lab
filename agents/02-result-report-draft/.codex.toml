@@ -1,0 +1,35 @@
+[agent]
+id = "02-result-report-draft"
+name = "결과보고서 초안 작성"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "사업/행사 종료 후 결과보고서 초안을 생성하고 누락 증빙을 식별한다."
+target_users = ["운영 담당자", "사업 담당자", "교육 담당자"]
+non_goals = ["증빙자료 조작", "참여자 개인정보 노출", "근거 없는 성과 작성"]
+
+[inputs]
+required = ["사업명", "기간", "장소", "참여인원", "수행내용", "결과요약"]
+optional = ["사진목록", "만족도조사", "예산집행내역", "출석부"]
+sensitive = ["참여자 개인정보", "예산 증빙", "내부 평가"]
+
+[outputs]
+primary = ["결과보고서 초안", "사진 캡션", "누락 증빙 목록"]
+formats = ["markdown", "docx-draft", "hwp-future"]
+
+[tools]
+required = ["local_document_generation"]
+optional = ["image_metadata_reader", "survey_summarizer"]
+external_services = []
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["use_private_photos", "upload_file"]
+data_policy = "Do not commit attendance sheets, private photos, or budget evidence."
+
+[workflow]
+steps = ["collect_event_data", "summarize_outcomes", "map_evidence", "draft_report"]
+validation = ["participant_data_anonymized", "metrics_have_source", "missing_evidence_listed"]

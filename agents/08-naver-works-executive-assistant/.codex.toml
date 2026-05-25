@@ -1,0 +1,35 @@
+[agent]
+id = "08-naver-works-executive-assistant"
+name = "네이버웍스 기반 대표 AI 비서"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "대표의 일정, 메시지, 파일 흐름을 요약하고 업무 초안을 준비한다."
+target_users = ["대표", "비서", "운영 리더"]
+non_goals = ["승인 없는 메시지 발송", "임의 의사결정", "계정 정보 저장"]
+
+[inputs]
+required = ["업무 범위", "권한 범위", "우선순위 기준"]
+optional = ["캘린더", "메시지", "파일", "연락처"]
+sensitive = ["대표 계정 정보", "내부 대화", "고객 정보", "의사결정 정보"]
+
+[outputs]
+primary = ["오늘의 우선순위", "회신 초안", "회의 준비 요약", "후속 조치 목록"]
+formats = ["markdown", "task-list", "message-draft"]
+
+[tools]
+required = ["naver_works_api"]
+optional = ["calendar_reader", "document_summarizer"]
+external_services = ["naver_works"]
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["connect_naver_works", "send_message", "change_calendar", "upload_file"]
+data_policy = "Do not commit Naver Works tokens, messages, files, or executive context."
+
+[workflow]
+steps = ["define_read_scope", "summarize_daily_context", "draft_responses", "collect_human_approvals"]
+validation = ["read_only_first", "drafts_not_sent", "sensitive_context_not_committed"]

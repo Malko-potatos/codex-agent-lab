@@ -1,0 +1,45 @@
+.env
+.env.*
+!.env.example
+
+# Credentials and local secrets
+credentials/
+secrets/
+tokens/
+cookies/
+*.key
+*.pem
+*.p12
+
+# Private input and generated output
+data/private/
+private/
+outputs/private/
+*.local.*
+
+# Office and HWP drafts that may contain sensitive data
+*.hwp
+*.hwpx
+*.docx
+*.xlsx
+*.pptx
+*.pdf
+
+# Keep public examples explicit
+!examples/**/*.md
+!agents/**/examples/**/*.md
+!agents/**/templates/**/*.md
+
+# Logs and caches
+logs/
+*.log
+.cache/
+node_modules/
+__pycache__/
+.pytest_cache/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

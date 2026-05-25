@@ -1,0 +1,35 @@
+[agent]
+id = "14-event-website-builder"
+name = "행사 홈페이지 제작"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "행사 정보를 바탕으로 홈페이지 초안과 배포 체크리스트를 생성한다."
+target_users = ["행사 운영자", "마케팅 담당자", "대표"]
+non_goals = ["검토 없는 공개 배포", "참가자 개인정보 수집 남용", "권리 미확인 이미지 사용"]
+
+[inputs]
+required = ["행사명", "일시", "장소", "대상", "신청 방법", "주요 프로그램"]
+optional = ["로고", "사진", "강사 소개", "FAQ", "후원사"]
+sensitive = ["비공개 행사 정보", "연락처", "참가자 데이터"]
+
+[outputs]
+primary = ["홈페이지 구조", "페이지 문구", "정적 사이트 초안", "배포 체크리스트"]
+formats = ["html", "markdown", "static-site"]
+
+[tools]
+required = ["frontend_generation"]
+optional = ["browser_preview", "netlify_or_render_deploy"]
+external_services = ["hosting_platform"]
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["publish_site", "collect_registration_data", "upload_assets"]
+data_policy = "Do not commit private attendee data, unlicensed images, or hidden event information."
+
+[workflow]
+steps = ["collect_event_info", "draft_site_structure", "build_static_draft", "review_before_publish"]
+validation = ["mobile_layout_checked", "registration_link_checked", "human_approval_before_publish"]

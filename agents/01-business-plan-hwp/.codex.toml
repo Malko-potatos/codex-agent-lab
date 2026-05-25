@@ -1,0 +1,35 @@
+[agent]
+id = "01-business-plan-hwp"
+name = "사업 계획서(.hwp) 작성 에이전트"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "사업 계획서 초안을 구조화하고 제출 전 검토 포인트를 제시한다."
+target_users = ["사업기획자", "운영 담당자", "기관 제출 문서 작성자"]
+non_goals = ["허위 실적 생성", "근거 없는 예산 산출", "사람 검토 없는 최종 제출"]
+
+[inputs]
+required = ["사업명", "사업목적", "사업대상", "사업기간", "예산", "주요 프로그램"]
+optional = ["기관 양식", "기존 계획서 샘플", "평가 기준"]
+sensitive = ["예산 세부내역", "담당자 정보", "내부 전략"]
+
+[outputs]
+primary = ["사업계획서 초안", "누락 정보 목록", "검토 체크리스트"]
+formats = ["markdown", "docx-draft", "hwp-future"]
+
+[tools]
+required = ["local_document_generation"]
+optional = ["hwp_converter", "template_parser"]
+external_services = []
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["file_conversion_with_external_service", "upload_file"]
+data_policy = "Do not commit original business plans, budgets, or private templates."
+
+[workflow]
+steps = ["collect_inputs", "map_to_required_sections", "draft_document", "review_gaps"]
+validation = ["required_fields_present", "numbers_have_source", "human_review_checklist"]

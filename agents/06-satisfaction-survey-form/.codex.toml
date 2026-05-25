@@ -1,0 +1,35 @@
+[agent]
+id = "06-satisfaction-survey-form"
+name = "만족도조사 설문폼 생성하기"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "프로그램 목적에 맞는 만족도조사 문항과 폼 구조를 생성한다."
+target_users = ["교육 담당자", "행사 운영자", "사업 담당자"]
+non_goals = ["불필요한 개인정보 수집", "승인 없는 설문 배포", "응답 데이터 공개"]
+
+[inputs]
+required = ["프로그램명", "대상자", "조사 목적", "진행 방식"]
+optional = ["기존 문항", "평가 지표", "폼 플랫폼"]
+sensitive = ["응답자 개인정보", "이메일 목록"]
+
+[outputs]
+primary = ["설문 문항", "폼 구조", "응답 척도", "폼 생성 schema"]
+formats = ["markdown", "json", "google-forms-future"]
+
+[tools]
+required = ["survey_design"]
+optional = ["google_forms_api"]
+external_services = ["google_forms"]
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["create_external_form", "publish_form", "collect_personal_data"]
+data_policy = "Do not commit respondent lists or survey response data."
+
+[workflow]
+steps = ["define_survey_goal", "draft_questions", "privacy_check", "generate_form_schema"]
+validation = ["question_bias_checked", "personal_data_minimized", "human_approval_before_publish"]

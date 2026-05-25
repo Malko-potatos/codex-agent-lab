@@ -1,0 +1,35 @@
+[agent]
+id = "13-public-grant-document-review"
+name = "공공 지원사업 서류검토 운영 지원"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "공공 지원사업 제출 서류의 요건 충족과 누락 항목을 검토한다."
+target_users = ["사업 담당자", "대표", "행정 운영 담당자"]
+non_goals = ["최종 법률/행정 판단", "허위자료 작성", "민감문서 공개 저장"]
+
+[inputs]
+required = ["공고문 요건", "제출 서류 목록", "작성 문서 초안"]
+optional = ["평가 기준", "제출 마감", "기관별 양식"]
+sensitive = ["사업자 정보", "재무정보", "개인정보", "내부 사업계획"]
+
+[outputs]
+primary = ["요건 검토표", "누락/오류 목록", "수정 권고안", "제출 체크리스트"]
+formats = ["markdown", "checklist", "csv"]
+
+[tools]
+required = ["document_review", "checklist_generation"]
+optional = ["pdf_parser", "hwp_converter"]
+external_services = []
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["upload_documents", "submit_application", "use_private_financials"]
+data_policy = "Do not commit grant applications, financial documents, or personal data."
+
+[workflow]
+steps = ["extract_requirements", "compare_documents", "flag_missing_items", "produce_review_checklist"]
+validation = ["deadline_checked", "required_files_checked", "human_review_before_submission"]

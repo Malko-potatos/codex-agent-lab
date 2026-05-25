@@ -1,0 +1,35 @@
+[agent]
+id = "11-press-release-journalist-distribution"
+name = "보도자료 자동작성 + 기자 자동 배포"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "보도자료와 기자 배포 이메일 초안을 생성한다."
+target_users = ["홍보 담당자", "대표", "마케팅 담당자"]
+non_goals = ["승인 없는 대량 발송", "기자 연락처 공개", "허위/과장 보도자료 작성"]
+
+[inputs]
+required = ["보도 주제", "핵심 메시지", "인용문", "배포 희망일"]
+optional = ["회사 소개", "사진", "기자 카테고리", "기존 보도자료"]
+sensitive = ["기자 연락처", "미공개 사업 정보", "내부 수치"]
+
+[outputs]
+primary = ["보도자료 초안", "제목 후보", "배포 이메일 초안", "검토 체크리스트"]
+formats = ["markdown", "email-draft"]
+
+[tools]
+required = ["press_release_drafting"]
+optional = ["email_client", "media_contact_manager"]
+external_services = ["email"]
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["send_email", "attach_files", "distribute_press_release"]
+data_policy = "Do not commit journalist contact lists, unpublished announcements, or internal metrics."
+
+[workflow]
+steps = ["verify_facts", "draft_release", "draft_email", "wait_for_human_send_approval"]
+validation = ["facts_checked", "quotes_approved", "human_approval_before_send"]

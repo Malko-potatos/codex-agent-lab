@@ -1,0 +1,35 @@
+[agent]
+id = "04-quote-derivative-estimator"
+name = "견적서 데이터를 기반으로 타 견적서 만들기"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "기존 견적 데이터를 기반으로 신규 견적서 초안과 산출 근거를 생성한다."
+target_users = ["영업 담당자", "운영 담당자", "대표"]
+non_goals = ["근거 없는 가격 산정", "승인 없는 견적 발송", "고객사 정보 공개"]
+
+[inputs]
+required = ["기준 견적 항목", "신규 요청 조건", "단가 정책", "수량"]
+optional = ["할인율", "부가세 방식", "납품 일정", "고객 유형"]
+sensitive = ["고객사 정보", "가격 정책", "계약 조건"]
+
+[outputs]
+primary = ["견적서 초안", "산출 근거", "변경 항목 비교표"]
+formats = ["xlsx-draft", "pdf-future", "markdown"]
+
+[tools]
+required = ["spreadsheet_generation"]
+optional = ["pdf_export", "invoice_template"]
+external_services = []
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["send_quote", "export_pdf_for_customer"]
+data_policy = "Do not commit customer quotes, confidential pricing, or contract terms."
+
+[workflow]
+steps = ["normalize_quote_data", "compare_new_conditions", "calculate_amounts", "draft_quote"]
+validation = ["formula_checked", "tax_policy_explicit", "human_approval_before_send"]

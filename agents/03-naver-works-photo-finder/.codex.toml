@@ -1,0 +1,35 @@
+[agent]
+id = "03-naver-works-photo-finder"
+name = "네이버웍스 연동 사진 찾기"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "네이버웍스에서 행사/사업 사진 후보를 검색하고 정리한다."
+target_users = ["운영 담당자", "홍보 담당자", "결과보고서 작성자"]
+non_goals = ["승인 없는 다운로드", "사진 원본 공개 저장", "내부 대화 노출"]
+
+[inputs]
+required = ["검색 키워드", "날짜 범위", "대상 채널 또는 폴더"]
+optional = ["담당자", "파일명 패턴", "사진 종류"]
+sensitive = ["네이버웍스 인증정보", "내부 대화", "사진 원본"]
+
+[outputs]
+primary = ["사진 후보 목록", "파일 위치", "추천 사용처"]
+formats = ["markdown", "csv"]
+
+[tools]
+required = ["naver_works_api"]
+optional = ["image_metadata_reader", "thumbnail_generator"]
+external_services = ["naver_works"]
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["connect_naver_works", "download_file", "share_file", "upload_file"]
+data_policy = "Do not commit Naver Works exports, credentials, message content, or original photos."
+
+[workflow]
+steps = ["confirm_scope", "dry_run_search", "list_candidates", "human_selects_files"]
+validation = ["credentials_not_committed", "candidate_metadata_only", "human_approval_before_download"]

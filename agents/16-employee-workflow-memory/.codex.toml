@@ -1,0 +1,35 @@
+[agent]
+id = "16-employee-workflow-memory"
+name = "직원 업무 플로우 저장"
+status = "idea"
+base = "codex"
+visibility = "public-skeleton-only"
+
+[scope]
+goal = "반복 업무 절차를 SOP, 체크리스트, 인수인계 문서로 구조화한다."
+target_users = ["대표", "운영 리더", "팀장", "신입 직원"]
+non_goals = ["직원 감시", "비밀번호 저장", "개인 평가 자동화"]
+
+[inputs]
+required = ["업무명", "담당자 역할", "절차 설명", "사용 도구"]
+optional = ["화면 캡처", "기존 매뉴얼", "예외 상황", "산출물 예시"]
+sensitive = ["직원 개인정보", "내부 시스템 화면", "고객 정보", "비밀번호"]
+
+[outputs]
+primary = ["업무 플로우", "SOP 초안", "체크리스트", "인수인계 문서"]
+formats = ["markdown", "docx-draft", "checklist"]
+
+[tools]
+required = ["workflow_summarization", "document_generation"]
+optional = ["screen_context_after_approval", "diagram_generation"]
+external_services = []
+
+[safety]
+human_review_required = true
+external_actions_default = "dry_run"
+approval_required_for = ["use_screen_capture", "store_internal_workflow", "share_workflow_document"]
+data_policy = "Do not commit employee personal data, passwords, customer data, or internal screenshots."
+
+[workflow]
+steps = ["collect_workflow_steps", "remove_sensitive_data", "structure_sop", "review_with_owner"]
+validation = ["consent_checked", "sensitive_data_removed", "owner_review_completed"]
