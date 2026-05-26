@@ -1,9 +1,11 @@
 [repository]
 name = "codex-agent-lab"
-purpose = "Codex 기반 반복 문서 및 운영 업무 자동화 에이전트 설계 저장소"
+purpose = "Codex를 기반으로 반복 문서 업무와 운영 업무를 자동화하기 위한 에이전트를 만드는 스터디 저장소"
 visibility = "public"
 language = "ko"
 core_agent = "agents/00-agent-harness-translator"
+target_audience = ["비전공 대학생", "직장인", "업무 자동화 수강생", "운영 담당자"]
+explanation_style = "파인만 학습법처럼 어려운 용어를 쉬운 말과 일상 업무 예시로 설명"
 
 [defaults]
 base_agent = "codex"
