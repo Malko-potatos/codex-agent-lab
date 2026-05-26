@@ -15,6 +15,7 @@ design_first_agent = "00-agent-harness-translator"
 
 [harness_translation]
 template = "agents/00-agent-harness-translator/templates/harness-parts-spec.md"
+memory_policy = "docs/codex-memory-policy.md"
 required_axes = ["instruction", "knowledge_state", "capability_action", "control_crosscutting"]
 required_parts = [
   "system_prompt",
@@ -26,6 +27,16 @@ required_parts = [
   "hook"
 ]
 must_define = ["input", "output", "failure_modes", "invariants"]
+memory_must_define = [
+  "memory_purpose",
+  "memory_candidates",
+  "never_store",
+  "storage_location",
+  "write_timing",
+  "read_timing",
+  "source_of_truth",
+  "review_and_delete"
+]
 empty_failure_modes_or_invariants = "design_defect_candidate"
 
 [folder_contract]

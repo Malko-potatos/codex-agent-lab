@@ -25,6 +25,7 @@
 - 필요한 MCP 도구 계약
 - 필요한 hook 지점
 - 필요한 subagent 위임 구조
+- 필요한 memory 후보와 source-of-truth 경계
 - 구현 전 질문 목록과 설계 결함 후보
 
 ## Operating Rules
@@ -33,6 +34,9 @@
 - 불변식과 실패 모드가 비어 있으면 설계가 끝난 것으로 보지 않습니다.
 - `AGENT.md`라고 사용자가 말해도 Codex repo 산출물은 `AGENTS.md`로 정규화합니다.
 - skill은 정적 절차, memory는 동적 상태로 구분합니다.
+- Codex 공식 memory는 repo 안 `MEMORY.md`가 아니라 Codex home의 `~/.codex/memories/` 아래 생성되는 local recall layer로 다룹니다.
+- 항상 적용되어야 하는 규칙은 memory가 아니라 `AGENTS.md`나 checked-in docs에 둡니다.
+- memory 후보에는 기억 목적, 저장 금지 데이터, 저장 위치, 저장 시점, 사용 시점, thread control, 검토/삭제 방법을 반드시 적습니다.
 - MCP는 외부 인터페이스, hook은 제어 흐름 개입점으로 구분합니다.
 - subagent는 위임 범위, 컨텍스트 상속, 결과 검증, 재귀 한계를 반드시 적습니다.
 - 민감정보, 인증정보, 실제 원문 데이터는 저장하지 않습니다.
@@ -42,11 +46,12 @@
 
 1. 사용자의 작업 아이디어를 한 문장 mission으로 정리합니다.
 2. 먼저 전 부품의 불변식을 작성합니다.
-3. 입력과 출력을 연결해 부품 간 계약을 맞춥니다.
-4. 실패 모드를 채우며 빈칸을 설계 결함 후보로 표시합니다.
-5. 작업을 시스템 프롬프트, 입력 프롬프트, memory, skill, MCP, subagent, hook으로 분해합니다.
-6. `AGENTS.md`와 `.codex.toml` 초안을 만듭니다.
-7. 구현 전 질문, 승인 지점, 테스트 가능한 불변식을 정리합니다.
+3. 공식 Codex memory, `AGENTS.md`, checked-in docs, skill의 경계를 나눕니다.
+4. 입력과 출력을 연결해 부품 간 계약을 맞춥니다.
+5. 실패 모드를 채우며 빈칸을 설계 결함 후보로 표시합니다.
+6. 작업을 시스템 프롬프트, 입력 프롬프트, memory, skill, MCP, subagent, hook으로 분해합니다.
+7. `AGENTS.md`와 `.codex.toml` 초안을 만듭니다.
+8. 구현 전 질문, 승인 지점, 테스트 가능한 불변식을 정리합니다.
 
 ## Translation Output Contract
 
@@ -57,6 +62,7 @@
 - `AGENTS.md Draft`: 해당 에이전트 폴더에 들어갈 지침 초안
 - `.codex.toml Draft`: 상태, 입력, 출력, 도구, 안전 정책 초안
 - `Required Skills`: skill로 뽑을 정적 절차
+- `Memory Contract`: 기억 목적, 저장 금지, 저장 위치, 저장 시점, 사용 시점, 검토/삭제, source-of-truth 경계
 - `Required MCP`: 외부 도구 계약과 권한 경계
 - `Required Hooks`: 개입 지점, 차단 여부, 실패 시 정책
 - `Subagents`: 위임이 필요한 경우의 범위와 한계
@@ -69,3 +75,4 @@
 - `AGENTS.md` 생성 체크리스트 추가
 - `.codex.toml` 생성 체크리스트 추가
 - hook/skill/MCP 선택 decision tree 추가
+- memory policy와 memory contract를 예시 에이전트에 반영

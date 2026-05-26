@@ -26,6 +26,7 @@ primary = [
   "하네스 부품별 명세",
   "AGENTS.md 초안",
   ".codex.toml 초안",
+  "memory contract",
   "skill 후보",
   "MCP 도구 계약",
   "hook 설계",
@@ -44,6 +45,24 @@ instruction = ["system_prompt", "input_prompt"]
 knowledge_state = ["memory", "skill"]
 capability_action = ["mcp_tool", "subagent"]
 control_crosscutting = ["hook"]
+
+[memory_contract]
+official_storage = "~/.codex/memories/"
+repo_policy = "Store memory policy and public-safe examples only. Do not store real Codex generated memories in this repository."
+source_of_truth = "Required team guidance belongs in AGENTS.md or checked-in docs. Memories are a local recall layer."
+must_define = [
+  "memory_purpose",
+  "memory_candidates",
+  "never_store",
+  "storage_location",
+  "write_timing",
+  "read_timing",
+  "thread_control",
+  "review_and_delete",
+  "failure_modes",
+  "invariants"
+]
+never_store = ["secrets", "credentials", "private_originals", "personal_data", "unreviewed_sensitive_context"]
 
 [safety]
 human_review_required = true
@@ -72,6 +91,9 @@ validation = [
   "all_parts_have_inputs_outputs",
   "all_parts_have_failure_modes",
   "all_parts_have_invariants",
+  "memory_contract_has_storage_and_timing",
+  "memory_contract_separates_source_of_truth",
+  "memory_contract_blocks_sensitive_data",
   "mcp_tools_have_trust_boundaries",
   "hooks_have_failure_policy",
   "subagents_have_recursion_limit",
