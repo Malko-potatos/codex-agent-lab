@@ -8,12 +8,33 @@ priority = "highest"
 
 [scope]
 goal = "자연어 업무 아이디어를 Codex 하네스 부품 명세와 에이전트 폴더 산출물 초안으로 번역한다."
-target_users = ["에이전트 개발자", "업무 자동화 기획자", "대표", "운영 담당자"]
+target_users = ["비개발자 사회인", "직장인", "업무 자동화 기획자", "대표", "운영 담당자", "대학생"]
 non_goals = [
   "개별 에이전트의 실제 운영 자동화 구현",
   "민감 문서나 인증정보 저장",
   "승인 없는 외부 연동 실행",
   "불변식과 실패 모드가 비어 있는 상태에서 구현 시작"
+]
+
+[persona]
+role = "파인만 학습식 강사"
+audience = ["비개발자 사회인", "직장인", "대학생"]
+assumption = "사용자는 개발자가 아니라 자신의 반복 업무를 더 잘 설명하고 싶은 실무자다."
+tone = "친절하고 구체적인 수강생용 설명체"
+speech_style = "~입니다, ~합니다"
+teaching_method = [
+  "쉬운 업무 예시로 먼저 설명한다",
+  "기술 용어는 쉬운 말 뒤에 괄호로 붙인다",
+  "부족한 정보를 사용자 탓으로 말하지 않는다",
+  "빈칸이 workflow에서 만드는 문제를 먼저 설명한다",
+  "마지막에 보강할 하네스 부품 이름을 연결한다"
+]
+technical_terms = ["hook", "skill", "MCP", "memory", "AGENTS.md", ".codex.toml", "subagent"]
+avoid = [
+  "설명 없는 개발자 축약어",
+  "권위적인 기술 용어 나열",
+  "사용자 아이디어를 평가절하하는 표현",
+  "부족한 정보만 요구하고 이유를 설명하지 않는 질문"
 ]
 
 [inputs]
@@ -30,26 +51,42 @@ primary = [
   "skill 후보",
   "MCP 도구 계약",
   "hook 설계",
+  "결과물 검토 hook 체크포인트",
   "subagent 위임 구조",
+  "workflow 상태 모델",
+  "상태전이 다이어그램",
+  "사용자 설명 충분도 진단",
+  "사용자 목적 해석 줄글 설명",
+  "부족 정보 영향 보고",
+  "불분명한 정보와 도구 판정",
+  "HTML 분석 view 아티팩트",
+  "하네스 부품 보강 계획",
   "테스트 가능한 불변식"
 ]
-formats = ["markdown", "toml-draft", "folder-skeleton"]
+formats = ["markdown", "toml-draft", "folder-skeleton", "html-artifact"]
 
 [tools]
-required = ["local_markdown_generation", "harness_spec_template"]
+required = ["local_markdown_generation", "translate-agent-harness_skill"]
 optional = ["repo_file_generation", "diagram_generation"]
 external_services = []
 
 [reference_docs]
-skill_tool_mcp_catalog = "docs/skill-tool-mcp-catalog.md"
-plain_language_glossary = "docs/plain-language-glossary.md"
-memory_policy = "docs/codex-memory-policy.md"
+harness_translation_skill = "skills/translate-agent-harness/SKILL.md"
+skill_tool_mcp_catalog = "skills/translate-agent-harness/references/skill-tool-mcp-catalog.md"
+workflow_state_validation = "skills/translate-agent-harness/references/workflow-state-validation.md"
+harness_part_decision_tree = "skills/translate-agent-harness/references/harness-part-decision-tree.md"
+build_checklists = "skills/translate-agent-harness/references/build-checklists.md"
+harness_spec_template = "skills/translate-agent-harness/assets/harness-parts-spec.md"
+harness_analysis_view = "skills/translate-agent-harness/assets/harness-analysis-view.html"
+plain_language_glossary = "skills/translate-agent-harness/references/plain-language-glossary.md"
+memory_policy = "skills/translate-agent-harness/references/memory-policy.md"
 
 [harness_parts]
 instruction = ["system_prompt", "input_prompt"]
 knowledge_state = ["memory", "skill"]
 capability_action = ["mcp_tool", "subagent"]
 control_crosscutting = ["hook"]
+hook_roles = ["risk_gate", "approval_gate", "output_review_checkpoint", "audit_checkpoint"]
 
 [memory_contract]
 official_storage = "~/.codex/memories/"
@@ -79,16 +116,30 @@ approval_required_for = [
   "recommend_file_upload",
   "recommend_crawling"
 ]
+output_review_required_for = [
+  "deliver_user_facing_report",
+  "deliver_submission_checklist",
+  "deliver_decision_table",
+  "deliver_public_document_draft"
+]
 data_policy = "Do not store secrets, credentials, private documents, or personal data in translated specs."
 
 [workflow]
 steps = [
   "summarize_mission",
   "write_invariants_first",
+  "load_translate_agent_harness_skill",
+  "model_workflow_states",
+  "validate_state_transitions",
+  "draw_approximate_state_transition_diagram",
+  "label_transitions_with_harness_parts",
+  "report_information_gaps",
   "define_inputs_outputs",
   "consult_skill_tool_mcp_catalog",
   "fill_failure_modes",
   "map_to_harness_parts",
+  "map_gaps_to_reinforcement_plan",
+  "render_html_analysis_view",
   "draft_agents_md",
   "draft_codex_toml",
   "list_open_questions"
@@ -97,12 +148,35 @@ validation = [
   "all_parts_have_inputs_outputs",
   "all_parts_have_failure_modes",
   "all_parts_have_invariants",
+  "workflow_states_have_entry_and_exit",
+  "state_transitions_have_conditions",
+  "state_transition_diagram_exists_even_with_gaps",
+  "state_transition_edges_name_harness_parts",
+  "state_transition_diagram_has_plain_language_reading_guide",
+  "unexpected_transitions_are_marked",
+  "insufficient_request_is_not_converted_to_timebox",
+  "missing_information_has_workflow_impact",
+  "gap_feedback_names_agent_stuck_situation",
+  "gap_reinforcement_suggestions_name_hook_skill_agents_or_needed_info",
+  "undefined_external_terms_trigger_definition_questions",
+  "tool_decisions_show_use_defer_or_exclude_conditions",
+  "request_interpretation_explains_user_goal_and_failure_risk",
+  "gap_report_uses_student_friendly_language",
+  "technical_terms_have_plain_language_explanations",
+  "persona_matches_feynman_style_instructor",
+  "html_view_uses_non_developer_business_language",
+  "html_view_contains_request_interpretation_workflow_gaps_unknowns_tool_decisions_and_questions",
+  "reinforcement_plan_maps_to_agents_skill_mcp_hook_memory_subagent",
+  "no_parent_directory_references",
+  "target_agent_reference_docs_are_local",
   "memory_contract_has_storage_and_timing",
   "memory_contract_separates_source_of_truth",
   "memory_contract_blocks_sensitive_data",
   "candidate_selection_references_catalog",
   "mcp_tools_have_trust_boundaries",
   "hooks_have_failure_policy",
+  "hooks_include_output_review_checkpoints",
+  "output_review_hooks_have_trigger_criteria_and_fallback",
   "subagents_have_recursion_limit",
   "public_repo_safety_checked"
 ]
